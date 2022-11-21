@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class= "header">
+    <h1> The Particle Physics Journal of Jargon </h1>
+  </div>
+
+  <div class="jargon-list">
+  {{range .}}
+    <div class="jargon">
+      <h3> <a href="/page/{{.LabelId}}">{{.Title}}</a> </h3>
+
+      {{.Description}}
+    </div>
+  {{ end }}
+  </div>
+  
+</div>
+</body>
+</html>
