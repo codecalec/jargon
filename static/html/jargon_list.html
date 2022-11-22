@@ -1,0 +1,10 @@
+{{ define "jargon_list" }}
+  <div class="jargon-list">
+  {{ range . }}
+    <div class="jargon">
+      <h3> <a href="/page/{{.LabelId}}">{{.Title}}</a> </h3>
+
+      {{ .Description }}
+    </div>
+  {{ end }}
+{{ end }}

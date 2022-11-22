@@ -118,11 +118,11 @@ func (db Database) InitialiseTables() {
 	db.initJargonTags()
 }
 
-func (db Database) AddJargon(j api.Jargon) {
+func (db Database) AddJargon(j api.Jargon) error {
 	ctx := context.Background()
 	tx, err := db.DB.BeginTx(ctx, nil)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	stmt, err := tx.Prepare(`
@@ -134,14 +134,16 @@ func (db Database) AddJargon(j api.Jargon) {
 	result, err := stmt.Exec(j.LabelId, j.Label, j.Title, j.Description)
 	if result == nil {
 		fmt.Printf("label_id=%v already exists\n", j.LabelId)
-		return
-
+		return nil
 	}
 
 	stmt, err = tx.Prepare(`
 	INSERT INTO jargontags(tag_id, jargon_id)
 	VALUES(?, ?)
 	`)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if j.Tags != nil {
 		for _, tag := range j.Tags {
@@ -153,11 +155,8 @@ func (db Database) AddJargon(j api.Jargon) {
 
 	}
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	tx.Commit()
+	return nil
 }
 
 func (db Database) GetJargon(label_id uint32) (*api.Jargon, error) {

@@ -1,0 +1,13 @@
+{{ define "content"}}
+  <h2> {{ .Title }} </h2>
+  
+  <div>
+    {{.Description}}
+  </div>
+  
+  <div>
+    {{ range .Tags }}
+      {{ . }}
+    {{ end }}
+  </div>
+{{ end }}

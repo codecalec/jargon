@@ -26,7 +26,7 @@ func main() {
 		"blinding",
 		"Data Blinding",
 		"The practice of not including actual physics data when constructing an analysis. This is to avoid biasing the analyst.",
-		[]api.Tag{api.Stats},
+		[]api.Tag{api.Stats, api.Experimental},
 	)
 	database.AddJargon(j)
 

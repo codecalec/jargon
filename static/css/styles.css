@@ -2,6 +2,21 @@ body {
   font-family: monospace
 }
 
+.header {
+  text-align: center;
+}
+
+.navbar {
+  display: flex;
+  margin: 2% 5%;
+}
+
+.navbar-block {
+  width: 50%;
+  text-aligh: center;
+  padding: 10x 10px;
+}
+
 .container {
   position: relative;
   width: 100%;
@@ -10,10 +25,6 @@ body {
   padding: 0 20px;
 }
 
-.jargon {
-
-}
-
-.header {
-  text-align: center;
+.jargon-list {
+  margin: 20px;
 }
