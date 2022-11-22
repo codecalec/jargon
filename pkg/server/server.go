@@ -63,13 +63,23 @@ func (h jargonPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func StartServer(database *db.Database, port uint) {
+func muxWithLogging(handler http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Got a %s request from %v for: %v", r.Method, r.RemoteAddr, r.URL)
+		handler.ServeHTTP(w, r)
+	})
+}
 
-	http.Handle("/", indexHandler{database})
-	http.Handle("/page/", jargonPageHandler{database})
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+func StartServer(database *db.Database, port uint) {
+	mux := http.NewServeMux()
+	mux.Handle("/", indexHandler{database})
+	mux.Handle("/page/", jargonPageHandler{database})
+	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+
+	handler := muxWithLogging(mux)
+
 	log.Printf("Starting server on port %v\n", port)
-	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), nil); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%v", port), handler); err != nil {
 		log.Fatal(err)
 	}
 }
