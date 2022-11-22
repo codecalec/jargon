@@ -22,12 +22,15 @@ func (h indexHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t := template.Must(template.ParseFiles("static/html/index.html"))
-
 	jargons, err := h.database.GetAllJargons()
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	t := template.Must(template.ParseFiles(
+		"static/html/index.html",
+		"static/html/home.html",
+		"static/html/jargon_list.html"))
 
 	if err := t.Execute(w, jargons); err != nil {
 		log.Fatal(err)
@@ -51,7 +54,13 @@ func (h jargonPageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		http.NotFoundHandler().ServeHTTP(w, r)
 	}
 
-	fmt.Fprintln(w, *j)
+	t := template.Must(template.ParseFiles(
+		"static/html/index.html",
+		"static/html/page.html"))
+
+	if err := t.Execute(w, *j); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func StartServer(database *db.Database, port uint) {
